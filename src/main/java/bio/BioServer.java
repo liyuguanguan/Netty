@@ -5,10 +5,11 @@ import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.channels.ServerSocketChannel;
 import java.nio.charset.Charset;
 
 /**
- * 正常的serversocket绝对不要正要写 这里只是掩饰，正常需要关闭I/O等操作
+ * 正常的serversocket绝对不要这样写 这里只是掩饰，正常需要关闭I/O等操作
  * @Author: liyu.guan
  * @Date: 2019/5/7 上午11:45
  */
@@ -16,7 +17,7 @@ public class BioServer {
 
     public static void main(final String[] args) throws IOException {
         ServerSocket serverSocket = new ServerSocket(1111);
-
+        ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
         while (true) {
             // 阻塞
             Socket socket = serverSocket.accept();
