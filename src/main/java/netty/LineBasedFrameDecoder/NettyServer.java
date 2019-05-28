@@ -1,12 +1,8 @@
-package netty;
+package netty.LineBasedFrameDecoder;
 
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
-import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
@@ -16,31 +12,23 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.LineBasedFrameDecoder;
 import io.netty.handler.codec.string.StringDecoder;
 
-
 /**
+ * 通过LineBasedFrameDecoder 以及 new StringDecoder() 解决TCP粘包拆包问题
+ * 其中LineBasedFrameDecoder的工作原理就是遍历bytebuf中的可读字节判断是否有"\n"或者"\r\n" 如果有就以此位置为结束位置
+ * StringDecoder的作用就是将收到的对象转换成字符串
  * @Author: liyu.guan
- * @Date: 2019/5/9 下午2:22
+ * @Date: 2019/5/28 上午10:09
  */
 public class NettyServer {
 
+
     public static void main(String[] args) {
         int port = 8321;
-       new  NettyStart(port).severStart();
-//        synchronized (NettyServer.class){
-//            while (true){
-//                try {
-//                    NettyServer.class.wait();
-//                } catch (Throwable e) {
-//
-//                }
-//            }
-//        }
+        new NettyStart(port).severStart();
     }
 
-
-
-
 }
+
 
 class NettyStart{
 
@@ -80,15 +68,15 @@ class NettyStart{
 
                 //每一个客户端连接过来之后 给一个监听器让他处理
                 .childHandler(new ChannelInitializer<SocketChannel>() {
-                    @Override
-                    protected void initChannel(SocketChannel ch) throws Exception {
-                        ch.pipeline().addLast(new LineBasedFrameDecoder(1024));
-                        ch.pipeline().addLast(new StringDecoder());
-                        //在这个通道上,加一个通道的处理器
-                        ch.pipeline().addLast(new ChannelInit());
-                    }
-                }
-                // 上面这种写法和这种一样
+                                  @Override
+                                  protected void initChannel(SocketChannel ch) throws Exception {
+                                      ch.pipeline().addLast(new LineBasedFrameDecoder(1024));
+                                      ch.pipeline().addLast(new StringDecoder());
+                                      //在这个通道上,加一个通道的处理器
+                                      ch.pipeline().addLast(new TimeServerHandler());
+                                  }
+                              }
+                        // 上面这种写法和这种一样
 //                .childHandler(new ChannelInit()
                 );
 
@@ -105,57 +93,5 @@ class NettyStart{
             workerGroup.shutdownGracefully();
             bossGroup.shutdownGracefully();
         }
-    }
-}
-
-class Handler  extends ChannelInboundHandlerAdapter {
-
-    @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        int count = 1;
-//        ByteBuf buf = (ByteBuf) msg;
-//        System.out.println(buf.toString(CharsetUtil.UTF_8) + count++);
-
-        String body = (String) msg;
-        System.out.println(body);
-//
-        String currentTime = "QBAD ORDER";
-        String da = "ddd";
-
-//        currentTime = currentTime + System.getProperty("line.separator");
-//        ByteBuf resp = Unpooled.copiedBuffer(body.getBytes());
-//        ctx.writeAndFlush(resp);
-//        String body1 = (String) msg;
-//        System.out.println(
-//                "The time server receive order: " + body1+"; the counter is "
-//        );
-//
-//        String currentTime = "QUERY TIME ORDER".equalsIgnoreCase(body1) ? new Date(System.currentTimeMillis()).toString()
-//                : "BAD ORDER";
-//
-//        currentTime = currentTime + System.getProperty("line.separator");
-        ByteBuf resp1 = Unpooled.copiedBuffer((da+System.getProperty("line.separator")).getBytes());
-        ctx.writeAndFlush(resp1);
-//
-
-    }
-
-    @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause)
-            throws Exception {
-        System.out.println("system error");
-        cause.printStackTrace();
-        ctx.close();
-    }
-}
-
-class ChannelInit extends ChannelInitializer<SocketChannel>{
-
-    @Override
-    protected void initChannel(SocketChannel ch) throws Exception {
-        ch.pipeline().addLast(new LineBasedFrameDecoder(1024));
-        ch.pipeline().addLast(new StringDecoder());
-        //在这个通道上,加一个通道的处理器
-        ch.pipeline().addLast(new Handler());
     }
 }

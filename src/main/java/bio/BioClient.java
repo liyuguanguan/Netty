@@ -10,8 +10,8 @@ import java.util.Date;
  */
 public class BioClient {
     public static void main(String[] args) throws IOException {
-        Socket socket = new Socket("127.0.0.1", 1111);
-        socket.getOutputStream().write((new Date()+"hello world").getBytes());
+        Socket socket = new Socket("127.0.0.1", 8321);
+        socket.getOutputStream().write((new Date()+"妹爷").getBytes());
         socket.getOutputStream().flush();
         byte[] bytes = new byte[1024];
         int aa = socket.getInputStream().read(bytes);

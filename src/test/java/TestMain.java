@@ -7,7 +7,7 @@ import io.netty.util.internal.SystemPropertyUtil;
 public class TestMain {
 
     public static void main(String[] args) {
-        System.out.println(Runtime.getRuntime().availableProcessors());
-        System.out.println(Math.max(1, SystemPropertyUtil.getInt("io.netty.eventLoopThreads", Runtime.getRuntime().availableProcessors() * 2)));
+        String A = "QUERY TIME ORDER$";
+        System.out.println(A.length());
     }
 }
