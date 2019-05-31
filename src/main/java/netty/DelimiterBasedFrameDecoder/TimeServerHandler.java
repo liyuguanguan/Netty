@@ -5,6 +5,8 @@ import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.util.Attribute;
+import io.netty.util.AttributeKey;
 
 import java.util.Date;
 
@@ -13,6 +15,11 @@ public class TimeServerHandler extends ChannelInboundHandlerAdapter {
     private int counter;
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+        Attribute<String> aa = ctx.channel().attr(AttributeKey.valueOf("guanguan"));
+        if (aa.get()==null){
+            aa.set("cxz");
+        }
+        System.out.println(aa.get());
         String body = (String) msg;
         System.out.println(
                 "The time server receive order: " + body+"; the counter is "+ ++counter

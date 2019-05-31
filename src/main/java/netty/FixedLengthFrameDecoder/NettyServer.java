@@ -16,7 +16,7 @@ import io.netty.handler.codec.FixedLengthFrameDecoder;
 import io.netty.handler.codec.string.StringDecoder;
 
 /**
- * FixedLengthFrameDecoder采用定长的方式解决TVP粘包
+ * FixedLengthFrameDecoder采用定长的方式解决TCP粘包
  * StringDecoder的作用就是将收到的对象转换成字符串
  * @Author: liyu.guan
  * @Date: 2019/5/28 上午10:09

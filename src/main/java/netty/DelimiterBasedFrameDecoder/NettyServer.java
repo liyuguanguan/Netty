@@ -15,6 +15,7 @@ import io.netty.handler.codec.DelimiterBasedFrameDecoder;
 import io.netty.handler.codec.FixedLengthFrameDecoder;
 import io.netty.handler.codec.LineBasedFrameDecoder;
 import io.netty.handler.codec.string.StringDecoder;
+import io.netty.util.AttributeKey;
 
 /**
  * DelimiterBasedFrameDecoder以结束符为结束符号
@@ -36,6 +37,8 @@ public class NettyServer {
 class NettyStart{
 
     int port;
+
+    private AttributeKey<String> childKey = AttributeKey.valueOf("guanguan");
 
     public NettyStart(int port) {
         this.port = port;
@@ -67,6 +70,7 @@ class NettyStart{
                 //Netty4使用对象池，重用缓冲区
                 .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
                 .childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
+                .childAttr(childKey, "I Have much money。。。 ")
 
 
                 //每一个客户端连接过来之后 给一个监听器让他处理
@@ -74,7 +78,7 @@ class NettyStart{
                                   @Override
                                   protected void initChannel(SocketChannel ch) throws Exception {
                                       ByteBuf byteBuf = Unpooled.copiedBuffer("$".getBytes());
-                                      ch.pipeline().addLast(new DelimiterBasedFrameDecoder(2048,byteBuf));
+                                      ch.pipeline().addLast(new DelimiterBasedFrameDecoder(2048, byteBuf));
                                       ch.pipeline().addLast(new StringDecoder());
                                       //在这个通道上,加一个通道的处理器
                                       ch.pipeline().addLast(new TimeServerHandler());

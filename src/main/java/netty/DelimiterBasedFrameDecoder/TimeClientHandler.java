@@ -4,6 +4,8 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.util.Attribute;
+import io.netty.util.AttributeKey;
 
 public class TimeClientHandler extends ChannelInboundHandlerAdapter {
     private int counter;
@@ -38,4 +40,7 @@ public class TimeClientHandler extends ChannelInboundHandlerAdapter {
         cause.printStackTrace();
         ctx.close();
     }
+
+
+
 }
