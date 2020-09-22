@@ -20,6 +20,8 @@ import io.netty.util.ReferenceCountUtil;
 import netty.util.TimeClientHandler;
 
 /**
+ *
+ * 各个组件的含义参考: https://juejin.im/post/6844903704668160008#heading-10
  * @Author: liyu.guan
  * @Date: 2019/5/15 下午5:46
  */
